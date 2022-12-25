@@ -14,8 +14,8 @@ function Stargate() {
 	const [mnemonic, setMnemonic] = useState<string>(localStorage.getItem("mnemonic"));
 	const [address, setAddress] = useState<string>();
 	const [balance, setBalance] = useState<Coin>();
-	const [allBalance, setAllBalances] = useState<Coin[]>();
-	const [client, setClient] = useState<any>();
+	const [allBalance, setAllBalances] = useState<readonly Coin[]>();
+	const [client, setClient] = useState<StargateClient>();
 	const [height, setHeight] = useState<number>();
 	const [chainId, setChainId] = useState<string>();
 	const [account, setAccount] = useState<Account>();
@@ -51,7 +51,7 @@ function Stargate() {
 	// 创建账户 Todo
 	const createAccount = async () => {
 		const wallet: DirectSecp256k1HdWallet = await DirectSecp256k1HdWallet.generate(12, {
-			prefix: "osmo"
+			prefix: chain.bech32Config.bech32PrefixAccAddr
 		});
 		localStorage.setItem("mnemonic", wallet.mnemonic);
 		setMnemonic(wallet.mnemonic);
@@ -61,17 +61,35 @@ function Stargate() {
 	const getAddressByMnemonic = async () => {
 		const mnemonic = localStorage.getItem("mnemonic");
 		const wallet: DirectSecp256k1HdWallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
-			prefix: "osmo"
+			prefix: chain.bech32Config.bech32PrefixAccAddr
 		});
 		const accounts = await wallet.getAccounts();
 		setAddress(accounts[0].address);
 	}
 
 	// 余额查询 Todo
-	const getBalance = async () => { };
+	const getBalance = async () => {
+		if (client) {
+			const _balance = await client.getBalance(address, chain.stakeCurrency.coinMinimalDenom);
+			setBalance(_balance);
+		}
+	};
 
 	// strageClient 基础 api 使用 Todo
-	const getOthers = async () => { };
+	const getOthers = async () => {
+		if (client) {
+			setChainId(await client.getChainId());
+
+			setAccount(await client.getAccount(address));
+			setAllBalances(await client.getAllBalances(address));
+
+			const _height = await client.getHeight();
+			setHeight(_height);
+			setBlock(await client.getBlock(_height));
+
+			setSequence(await client.getSequence(address));
+		}
+	};
 
 	// connect client Todo
 	const connect = async () => {
@@ -97,8 +115,8 @@ function Stargate() {
 			<h2>StargateClient</h2>
 			<label>
 				<span>Chain: Osmosis </span>
-				<button onClick={client?.queryClient ? disconnect : connect}>
-					{client?.queryClient ? "断开" : "连接"}
+				<button onClick={client ? disconnect : connect}>
+					{client ? "断开" : "连接"}
 				</button>
 			</label>
 			<div className="weight">
