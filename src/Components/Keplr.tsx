@@ -1,4 +1,4 @@
-import { SigningStargateClient } from "@cosmjs/stargate";
+import { assertIsDeliverTxSuccess, SigningStargateClient } from "@cosmjs/stargate";
 import type { ChainInfo } from "@keplr-wallet/types";
 import React, { useEffect, useState } from "react";
 import osmo from "../config/osmosis";
@@ -60,10 +60,50 @@ function Keplr() {
 	};
 
 	// txhash查询  Todo
-	const getTx = async () => { };
+	const getTx = async () => {
+		if (tx) {
+			setTxRes(await client.getTx(tx));
+		}
+	};
 
 	// 转账 Todo
-	const sendToken = async () => { };
+	const sendToken = async () => {
+		if (!client || !address) {
+			alert("Please connect Keplr wallet first");
+			return;
+		};
+		if (!recipent) {
+			alert("The receiver address cannot be empty");
+			return;
+		}
+
+		const amount = 0.1 * 1e6;
+		const res = await client.sendTokens(
+			address,
+			recipent,
+			[{
+				denom: chain.stakeCurrency.coinMinimalDenom,
+				amount: amount.toString(),
+			}],
+			{
+				amount: [{
+					denom: chain.stakeCurrency.coinMinimalDenom,
+					amount: 0.001,
+				}],
+				gas: "200000",
+			},
+			""
+		);
+		assertIsDeliverTxSuccess(res);
+		if (res.code === 0) {
+			alert(
+				`Transfer to ${recipent} successfully.\n\n` +
+				`Block Height: ${res.height}\n\n` +
+				`Tx Hash: ${res.transactionHash}`
+			);
+			setTx(res.transactionHash);
+		}
+	};
 
 	return (
 		<div className="keplr">
