@@ -151,7 +151,7 @@ function Keplr() {
 				/>
 				&nbsp;
 				<button onClick={sendToken}>
-					发送 10 {chain.feeCurrencies[0].coinMinimalDenom}
+					发送 10 {chain?.stakeCurrency.coinDenom}
 				</button>
 			</div>
 			<label>2、getTx()</label>
