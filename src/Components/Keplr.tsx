@@ -77,7 +77,7 @@ function Keplr() {
 			return;
 		}
 
-		const amount = 0.1 * 1e6;
+		const amount = 10 * 1e6;
 		const res = await client.sendTokens(
 			address,
 			recipent,
