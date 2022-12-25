@@ -168,6 +168,12 @@ function Keplr() {
 						<div>height:{txRes?.height} </div>
 						<div>gasUsed:{txRes?.gasUsed} </div>
 						<div>gasWanted:{txRes?.gasWanted} </div>
+						<br />
+						<div>
+							Click&nbsp;
+							<a target="_blank" href={`https://testnet.mintscan.io/osmosis-testnet/txs/${tx}`}>here</a>
+							&nbsp;to view more details
+						</div>
 					</>
 				)}
 			</div>
