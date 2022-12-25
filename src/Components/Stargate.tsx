@@ -49,29 +49,42 @@ function Stargate() {
 	}, [address, client]);
 
 	// 创建账户 Todo
-	const createAccount = async () => {};
+	const createAccount = async () => { };
 
 	// 通过助记词钱包获得地址 Todo
-	const getAddressByMnemonic = async () => {}
+	const getAddressByMnemonic = async () => { }
 
 	// 余额查询 Todo
-	const getBalance = async () => {};
+	const getBalance = async () => { };
 
 	// strageClient 基础 api 使用 Todo
-	const getOthers = async () => {};
+	const getOthers = async () => { };
 
 	// connect client Todo
-	const connect = async () => {};
+	const connect = async () => {
+		const _client = await StargateClient.connect(chain.rpc);
+		setClient(_client);
+	};
 
 	// disconnect client Todo
-	const disConnect = async () => {};
+	const disconnect = async () => {
+		await client.disconnect();
+		setClient(null);
+		setAccount(null);
+		setChainId(null);
+		setHeight(null);
+		setBalance(null);
+		setAllBalances(null);
+		setBlock(null);
+		setSequence(null);
+	};
 
 	return (
 		<div className="stargate">
 			<h2>StargateClient</h2>
 			<label>
 				<span>Chain: Osmosis </span>
-				<button onClick={client?.queryClient ? disConnect : connect}>
+				<button onClick={client?.queryClient ? disconnect : connect}>
 					{client?.queryClient ? "断开" : "连接"}
 				</button>
 			</label>
