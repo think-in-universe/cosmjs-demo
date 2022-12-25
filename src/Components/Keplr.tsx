@@ -87,7 +87,7 @@ function Keplr() {
 			}],
 			{
 				amount: [{
-					denom: chain.stakeCurrency.coinMinimalDenom,
+					denom: chain.feeCurrencies[0].coinMinimalDenom,
 					amount: 0.001,
 				}],
 				gas: "200000",
@@ -132,11 +132,9 @@ function Keplr() {
 					{balance?.amount && (
 						<>
 							<span>
-								{parseFloat(
-									String(Number(balance?.amount) / Math.pow(10, 6))
-								).toFixed(2)}
+								{Number(balance?.amount) / Math.pow(10, chain?.stakeCurrency.coinDecimals)}
 							</span>
-							<span> {balance?.denom}</span>
+							<span> {chain?.stakeCurrency.coinDenom}</span>
 						</>
 					)}
 				</div>

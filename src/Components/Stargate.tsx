@@ -138,11 +138,10 @@ function Stargate() {
 				{balance?.amount && (
 					<>
 						<span>
-							{parseFloat(
-								String(Number(balance?.amount) / Math.pow(10, 6))
-							).toFixed(2)}
+							{Number(balance?.amount) / Math.pow(10, chain?.stakeCurrency.coinDecimals)}
+							&nbsp;
 						</span>
-						<span>{balance?.denom}</span>
+						<span> {chain?.stakeCurrency.coinDenom}</span>
 					</>
 				)}
 			</div>
@@ -169,11 +168,9 @@ function Stargate() {
 				{balance?.amount && (
 					<>
 						<span>
-							{parseFloat(
-								String(Number(balance?.amount) / Math.pow(10, 6))
-							).toFixed(2)}
+							{Number(balance?.amount) / Math.pow(10, chain?.stakeCurrency.coinDecimals)}
 						</span>
-						<span> {balance?.denom}</span>
+						<span> {chain?.stakeCurrency.coinDenom}</span>
 					</>
 				)}
 			</div>
@@ -193,9 +190,7 @@ function Stargate() {
 				{allBalance?.map((item) => {
 					return (
 						<div className="ell" key={item.denom}>
-							{parseFloat(
-								String(Number(item?.amount) / Math.pow(10, 6))
-							).toFixed(2)}
+							{item?.amount}
 							&nbsp;
 							{item?.denom}
 						</div>
