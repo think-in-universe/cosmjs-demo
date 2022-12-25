@@ -49,10 +49,23 @@ function Stargate() {
 	}, [address, client]);
 
 	// 创建账户 Todo
-	const createAccount = async () => { };
+	const createAccount = async () => {
+		const wallet: DirectSecp256k1HdWallet = await DirectSecp256k1HdWallet.generate(12, {
+			prefix: "osmo"
+		});
+		localStorage.setItem("mnemonic", wallet.mnemonic);
+		setMnemonic(wallet.mnemonic);
+	};
 
 	// 通过助记词钱包获得地址 Todo
-	const getAddressByMnemonic = async () => { }
+	const getAddressByMnemonic = async () => {
+		const mnemonic = localStorage.getItem("mnemonic");
+		const wallet: DirectSecp256k1HdWallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+			prefix: "osmo"
+		});
+		const accounts = await wallet.getAccounts();
+		setAddress(accounts[0].address);
+	}
 
 	// 余额查询 Todo
 	const getBalance = async () => { };
